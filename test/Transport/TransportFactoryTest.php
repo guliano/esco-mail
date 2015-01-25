@@ -1,4 +1,20 @@
 <?php
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
+ */
 
 namespace EscoMailTest\Transport;
 
@@ -11,29 +27,29 @@ use org\bovigo\vfs\vfsStreamDirectory;
 
 class TransportFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     private $serviceManager;
     private $pluginManager;
-    
+
     /**
      * @var vfsStreamDirectory
      */
     private $root;
-    
+
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->serviceManager   = new ServiceManager();
         $this->pluginManager    = new PluginManager();
         $this->root             = vfsStream::setup('exampleDir', 0777);
     }
-    
+
     public function tearDown()
     {
         $this->root = null;
     }
-    
+
     public function testCreateServiceCanThrowException()
     {
         $configArray = array(
@@ -41,30 +57,30 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
             'transport_options' => array(),
         );
         $config = new ModuleOptions($configArray);
-        
+
         $this->serviceManager->setService('EscoMail\Options', $config);
-        
+
         $factory = new TransportFactory();
         $this->setExpectedException('RuntimeException');
-        
+
         $factory->createService($this->serviceManager);
     }
-    
+
     /**
      * @dataProvider getConfigArray
      */
     public function testCreateServiceWithSomeOptions($configArray, $expected)
     {
         $config = new ModuleOptions($configArray);
-        
+
         $this->serviceManager->setService('EscoMail\Options', $config);
-        
+
         $factory = new TransportFactory();
         $transport = $factory->createService($this->serviceManager);
-        
+
         $this->assertInstanceOf($expected, $transport);
     }
-    
+
     public function testCreateServiceWithDirectoryCreation()
     {
         $configArray = array(
@@ -74,16 +90,16 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
         $config = new ModuleOptions($configArray);
-        
+
         $this->serviceManager->setService('EscoMail\Options', $config);
-        
+
         $factory = new TransportFactory();
         $transport = $factory->createService($this->serviceManager);
-        
+
         $this->assertInstanceOf('Zend\Mail\Transport\File', $transport);
         $this->assertTrue($this->root->hasChild('tmp'));
     }
-    
+
     public function getConfigArray()
     {
         return array(
