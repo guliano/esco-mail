@@ -1,0 +1,55 @@
+<?php
+
+return array(
+    'esco_mail' => array(
+        /**
+         * Test mode - if enabled, mails are always send to defined root e-mail
+         * instead of real recipient
+         */
+//        'mail_test_mode' => false,
+
+        /**
+         * Root e-mail address for bcc or test mails
+         */
+//        'root_email'    => 'root@example.com',
+
+        /**
+         * Add root address to bcc for every sending mail
+         * (only if mail_test_mode = false)
+         */
+//        'add_root_bcc'  => false,
+
+        /**
+         * Base URI for main domain
+         */
+//        'base_uri' => 'http://example.com',
+
+        /**
+         * Sender e-mail address
+         */
+//        'mail_send_from' => 'mail@example.com',
+
+        /**
+         * Sender name
+         */
+//        'mail_send_from_name' => 'Sender Name',
+
+        /**
+         * Path to log dir.
+         * If provided, EscoMail will create a mail.log file. Otherwise, logging will be disabled.
+         */
+//        'log_dir' => 'data/logs'
+
+        /**
+         * Class implementing \Zend\Mail\Transport\TransportInterface interface
+         */
+//        'transport_class' => 'Zend\Mail\Transport\File',
+
+        /**
+         * Options for transport_class
+         */
+//        'transport_options' => array(
+//            'path'  => 'data/mail',
+//        ),
+    ),
+);
