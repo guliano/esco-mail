@@ -1,5 +1,6 @@
 EscoMail
 =======
+[![Build Status](https://travis-ci.org/guliano/esco-mail.svg)](https://travis-ci.org/guliano/esco-mail)
 
 Introduction
 ------------
@@ -8,7 +9,7 @@ This module wraps ZF2 mail functionality. It supports file attachments, template
 
 Requirements
 ------------
-  
+
 Please see the [composer.json](composer.json) file.
 
 Installation
