@@ -1,6 +1,6 @@
 {
     "name": "guliano/esco-mail",
-    "description": "Library provides extra layer for zf2 mail functions",
+    "description": "ZF2 module wrapping mail functionality",
     "type": "library",
     "license": "MIT",
     "keywords": [
@@ -21,6 +21,11 @@
         "mikey179/vfsStream": "~1.4",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-uri": "~2.3"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
     },
     "autoload": {
         "psr-4": {
