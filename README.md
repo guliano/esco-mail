@@ -1,7 +1,7 @@
 EscoMail
 =======
 [![Build Status](https://travis-ci.org/guliano/esco-mail.svg)](https://travis-ci.org/guliano/esco-mail)
-[![Coverage Status](https://coveralls.io/repos/guliano/esco-mail/badge.svg)](https://coveralls.io/r/guliano/esco-mail)
+[![Coverage Status](https://coveralls.io/repos/guliano/esco-mail/badge.svg?branch=master)](https://coveralls.io/r/guliano/esco-mail?branch=master)
 
 Introduction
 ------------
