@@ -118,10 +118,11 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTransport()
     {
+        vfsStream::setup('exampleDir', 0777);
         $configArray = array(
             'transport_class'   => 'Zend\Mail\Transport\File',
             'transport_options' => array(
-                'path' => 'data/mail',
+                'path' => vfsStream::url('exampleDir') . '/data/mail',
             ),
         );
 
