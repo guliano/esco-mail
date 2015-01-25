@@ -25,6 +25,7 @@ use Zend\EventManager\EventManager;
 use EscoMail\Options\ModuleOptions;
 use Zend\View\Model\ViewModel;
 use org\bovigo\vfs\vfsStream;
+use Zend\Mail\Transport\Exception\RuntimeException;
 
 class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -97,10 +98,18 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new MailServiceFactory();
         $mailService = $factory->createService($serviceManager);
 
-        $serviceManager->expects($this->once())->method('get')->with('EscoMail\Options')->will($this->returnValue($options));
+        $serviceManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('EscoMail\Options')
+            ->will($this->returnValue($options));
         $this->assertInstanceOf('Zend\Mail\Message', $mailService->getMessage());
 
-        $serviceManager->expects($this->never())->method('get')->with('EscoMail\Options')->will($this->returnValue($options));
+        $serviceManager
+            ->expects($this->never())
+            ->method('get')
+            ->with('EscoMail\Options')
+            ->will($this->returnValue($options));
         $this->assertInstanceOf('Zend\Mail\Message', $mailService->getMessage());
     }
 
@@ -153,8 +162,14 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideSendOptions
      */
-    public function testSend($testMode, $addRootBcc, $expectedRecipientAddress, $expectedToCount, $expectedBccCount, $expectedSubject)
-    {
+    public function testSend(
+        $testMode,
+        $addRootBcc,
+        $expectedRecipientAddress,
+        $expectedToCount,
+        $expectedBccCount,
+        $expectedSubject
+    ) {
         $configArray = array(
             'mail_send_from' => 'john.doe@example.com',
             'mail_send_from_name' => 'John Doe',
@@ -217,7 +232,10 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $eventManagerMock = $this->getMock('Zend\EventManager\EventManagerInterface');
         $mailService->setEventManager($eventManagerMock);
 
-        $transportMock->expects($this->once())->method('send')->will($this->throwException(new \Zend\Mail\Transport\Exception\RuntimeException('Error while sending mail')));
+        $transportMock
+            ->expects($this->once())
+            ->method('send')
+            ->will($this->throwException(new RuntimeException('Error while sending mail')));
         $eventManagerMock->expects($this->once())->method('trigger')->with('mailSent.error');
 
         $mailService->getMessage()->addTo('deliver@example.com');
@@ -286,7 +304,11 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $viewModel = new ViewModel();
         $viewModel->setTemplate('template/name');
         $viewModel->setVariable('foo', 'bar');
-        $viewRenderer->expects($this->once())->method('render')->with($viewModel)->will($this->returnValue('<p>Html message</p>'));
+        $viewRenderer
+            ->expects($this->once())
+            ->method('render')
+            ->with($viewModel)
+            ->will($this->returnValue('<p>Html message</p>'));
         $mailService->prepareMessage('Mail subject', $viewModel);
 
         $message = $mailService->getMessage();
@@ -338,7 +360,10 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $message = $mailService->getMessage();
 
         $this->assertEquals('Mail subject', $message->getSubject());
-        $this->assertContains('This is a message in Mime Format.  If you see this, your mail reader does not support this format.', $message->getBodyText());
+        $this->assertContains(
+            'This is a message in Mime Format.  If you see this, your mail reader does not support this format.',
+            $message->getBodyText()
+        );
 
         /* @var $body \Zend\Mime\Message */
         $body = $message->getBody();
@@ -433,10 +458,10 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
     */
     public function invokeMethod(&$object, $methodName, array $parameters = array())
     {
-       $reflection = new \ReflectionClass(get_class($object));
-       $method = $reflection->getMethod($methodName);
-       $method->setAccessible(true);
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
 
-       return $method->invokeArgs($object, $parameters);
+        return $method->invokeArgs($object, $parameters);
     }
 }

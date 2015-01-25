@@ -97,7 +97,10 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $eventManager->expects($this->any())->method('getSharedManager')->will($this->returnValue($sharedManager));
+        $eventManager
+            ->expects($this->any())
+            ->method('getSharedManager')
+            ->will($this->returnValue($sharedManager));
 
         $sharedManager
             ->expects($this->exactly(2))
@@ -210,7 +213,10 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
         $mailLogger->onMailSentError($mvcEvent);
 
         $content = file_get_contents($logFile);
-        $match = preg_match("/^(.*)ERR \(3\):(.*)'$mailSubject'(.*): foo@bar.com(.*): Error message description/i", $content);
+        $match = preg_match(
+            "/^(.*)ERR \(3\):(.*)'$mailSubject'(.*): foo@bar.com(.*): Error message description/i",
+            $content
+        );
         $this->assertEquals(1, $match);
     }
 
@@ -226,10 +232,30 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
             array(null, 'foo@bar.com', 'foo2@bar.com', array('foo@bar.com', 'foo2@bar.com')),
             array(null, 'foo@bar.com', null, array('foo@bar.com')),
             array(null, null, 'foo@bar.com', array('foo@bar.com')),
-            array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com')),
-            array(array('foo@bar.com', 'foo2@bar.com'), 'foo3@bar.com', 'foo4@bar.com', array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', 'foo4@bar.com')),
-            array(array('foo@bar.com', 'foo2@bar.com'), array('foo3@bar.com', 'foo4@bar.com'), 'foo5@bar.com', array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', 'foo4@bar.com', 'foo5@bar.com')),
-            array(array('foo@bar.com', 'foo2@bar.com'), array('foo3@bar.com', 'foo4@bar.com'), array('foo5@bar.com', 'foo6@bar.com'), array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', 'foo4@bar.com', 'foo5@bar.com', 'foo6@bar.com')),
+            array(
+                'foo@bar.com',
+                'foo2@bar.com',
+                'foo3@bar.com',
+                array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com')
+            ),
+            array(
+                array('foo@bar.com', 'foo2@bar.com'),
+                'foo3@bar.com',
+                'foo4@bar.com',
+                array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', 'foo4@bar.com')
+            ),
+            array(
+                array('foo@bar.com', 'foo2@bar.com'),
+                array('foo3@bar.com', 'foo4@bar.com'),
+                'foo5@bar.com',
+                array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', 'foo4@bar.com', 'foo5@bar.com')
+            ),
+            array(
+                array('foo@bar.com', 'foo2@bar.com'),
+                array('foo3@bar.com', 'foo4@bar.com'),
+                array('foo5@bar.com', 'foo6@bar.com'),
+                array('foo@bar.com', 'foo2@bar.com', 'foo3@bar.com', 'foo4@bar.com', 'foo5@bar.com', 'foo6@bar.com')
+            ),
         );
     }
 
@@ -244,10 +270,10 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
     */
     public function invokeMethod(&$object, $methodName, array $parameters = array())
     {
-       $reflection = new \ReflectionClass(get_class($object));
-       $method = $reflection->getMethod($methodName);
-       $method->setAccessible(true);
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
 
-       return $method->invokeArgs($object, $parameters);
+        return $method->invokeArgs($object, $parameters);
     }
 }

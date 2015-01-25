@@ -44,7 +44,6 @@ class TransportFactory implements FactoryInterface
         $config = $serviceLocator->get('EscoMail\Options');
 
         if ($config->getTransportClass()) {
-
             /* @var $transport TransportInterface */
             $transport = $this->transportPluginManager->get($config->getTransportClass());
 
