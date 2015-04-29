@@ -183,7 +183,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $transportMock = $this->getMock('Zend\Mail\Transport\Null');
+        $transportMock = $this->getMock('Zend\Mail\Transport\InMemory');
         $serviceManager->setService('EscoMail\Transport', $transportMock);
 
         $factory = new MailServiceFactory();
@@ -224,7 +224,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $transportMock = $this->getMock('Zend\Mail\Transport\Null');
+        $transportMock = $this->getMock('Zend\Mail\Transport\InMemory');
         $serviceManager->setService('EscoMail\Transport', $transportMock);
 
         $factory = new MailServiceFactory();
