@@ -160,9 +160,9 @@ class MailServiceFactory implements FactoryInterface, EventManagerAwareInterface
                 }
 
                 $attachmentPart = new MimePart(file_get_contents($attachment['url']));
-                $attachmentPart->type = ($attachment['type']) ? $attachment['type'] : 'application/octet-stream';
+                $attachmentPart->type = (isset($attachment['type'])) ? $attachment['type'] : 'application/octet-stream';
                 $attachmentPart->disposition = 'attachment; filename="' . $attachment['filename'] . '"';
-                $attachmentPart->encoding = ($attachment['encoding']) ? $attachment['encoding'] : 'base64';
+                $attachmentPart->encoding = (isset($attachment['encoding'])) ? $attachment['encoding'] : 'base64';
 
                 $attachmentParts[] = $attachmentPart;
             }
