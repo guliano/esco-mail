@@ -19,6 +19,7 @@
 namespace EscoMail\Service;
 
 use EscoMail\Options\ModuleOptions;
+use Zend\Mime\Mime;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -64,6 +65,16 @@ class MailServiceFactory implements FactoryInterface, EventManagerAwareInterface
             return $this->message;
         }
 
+        return $this->newMessage();
+    }
+
+    /**
+     * Creates a new message with some of the fields populated.
+     *
+     * @return Message
+     */
+    private function newMessage()
+    {
         /* @var $config ModuleOptions */
         $config = $this->serviceLocator->get('EscoMail\Options');
 
@@ -171,7 +182,7 @@ class MailServiceFactory implements FactoryInterface, EventManagerAwareInterface
         $body = new MimeMessage();
         $body->setParts(ArrayUtils::merge(array($mimePart), $attachmentParts));
 
-        $message = $this->getMessage();
+        $message = $this->newMessage();
         $message->setSubject($subject);
         $message->setBody($body);
     }
