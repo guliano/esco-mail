@@ -19,6 +19,10 @@
 namespace EscoMailTest;
 
 use EscoMail\Module;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Application;
+use Zend\EventManager\EventManagerInterface;
+use Zend\ServiceManager\ServiceManager;
 
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,16 +37,16 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module         = new Module();
 
-        $mvcEvent       = $this->getMock('Zend\Mvc\MvcEvent');
-        $application    = $this->getMock('Zend\Mvc\Application', array(), array(), '', false);
-        $eventManager   = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $mvcEvent       = $this->createMock(MvcEvent::class);
+        $application    = $this->createMock(Application::class);
+        $eventManager   = $this->createMock(EventManagerInterface::class);
+        $serviceManager = $this->createMock(ServiceManager::class);
 
         $mvcEvent->expects($this->once())->method('getApplication')->will($this->returnValue($application));
         $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
         $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
 
-        $logger = $this->getMock('EscoMail\Service\MailLogger', array(), array(), '', false);
+        $logger = $this->createMock('EscoMail\Service\MailLogger', array(), array(), '', false);
 
         //nie wiem czy na 100% jest dobrze przeprowadzony test
         $serviceManager->expects($this->once())

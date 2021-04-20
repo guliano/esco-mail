@@ -18,7 +18,11 @@
 
 namespace EscoMail\View;
 
-use Zend\ServiceManager\FactoryInterface;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplateMapResolver;
@@ -26,28 +30,28 @@ use Zend\View\Resolver\TemplateMapResolver;
 class RendererFactory implements FactoryInterface
 {
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /* @var $config ModuleOptions */
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
-        if ($serviceLocator->has('ViewRenderer')) {
-            return $serviceLocator->get('ViewRenderer');
+        if ($container->has('ViewRenderer')) {
+            return $container->get('ViewRenderer');
         } else {
             $renderer = new PhpRenderer();
 
             // register helpers
-            $helperManager = $serviceLocator->get('ViewHelperManager');
+            $helperManager = $container->get('ViewHelperManager');
             if (isset($config['esco_mail']['base_uri']) && !empty($config['esco_mail']['base_uri'])) {
                 $urlHelper = $helperManager->get('Url');
-                $httpRouter = $serviceLocator->get('HttpRouter');
+                $httpRouter = $container->get('HttpRouter');
                 $httpRouter->setBaseUrl($config['esco_mail']['base_uri']);
                 $urlHelper->setRouter($httpRouter);
             }
             $renderer->setHelperPluginManager($helperManager);
 
             // register resolver
-            $resolver = $serviceLocator->get('ViewResolver');
+            $resolver = $container->get('ViewResolver');
             $resolver->attach(new TemplateMapResolver($config['view_manager']['template_map']));
             $renderer->setResolver($resolver);
 

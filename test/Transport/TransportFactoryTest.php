@@ -24,12 +24,14 @@ use EscoMail\Options\ModuleOptions;
 use EscoMail\Transport\PluginManager;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Zend\Mail\Transport\File;
+use Zend\Mail\Transport\Sendmail;
+use Zend\Mail\Transport\Smtp;
 
 class TransportFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
     private $serviceManager;
-    private $pluginManager;
 
     /**
      * @var vfsStreamDirectory
@@ -41,7 +43,6 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->serviceManager   = new ServiceManager();
-        $this->pluginManager    = new PluginManager();
         $this->root             = vfsStream::setup('exampleDir', 0777);
     }
 
@@ -63,7 +64,7 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new TransportFactory();
         $this->setExpectedException('RuntimeException');
 
-        $factory->createService($this->serviceManager);
+        $factory($this->serviceManager, 'EscoMail\Transport');
     }
 
     /**
@@ -76,15 +77,15 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->serviceManager->setService('EscoMail\Options', $config);
 
         $factory = new TransportFactory();
-        $transport = $factory->createService($this->serviceManager);
+        $transport = $factory($this->serviceManager, 'EscoMail\Transport');
 
-        $this->assertInstanceOf($expected, $transport);
+        self::assertInstanceOf($expected, $transport);
     }
 
     public function testCreateServiceWithDirectoryCreation()
     {
         $configArray = array(
-            'transport_class'   => 'Zend\Mail\Transport\File',
+            'transport_class'   => File::class,
             'transport_options' => array(
                 'path' => vfsStream::url('exampleDir') . '/tmp'
             ),
@@ -94,10 +95,10 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->serviceManager->setService('EscoMail\Options', $config);
 
         $factory = new TransportFactory();
-        $transport = $factory->createService($this->serviceManager);
+        $transport = $factory($this->serviceManager, 'EscoMail\Transport');
 
-        $this->assertInstanceOf('Zend\Mail\Transport\File', $transport);
-        $this->assertTrue($this->root->hasChild('tmp'));
+        self::assertInstanceOf(File::class, $transport);
+        self::assertTrue($this->root->hasChild('tmp'));
     }
 
     public function getConfigArray()
@@ -105,31 +106,31 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\Sendmail',
+                    'transport_class'   => Sendmail::class,
                     'transport_options' => 'some parameter',
                 ),
-                'Zend\Mail\Transport\Sendmail'
+                Sendmail::class
             ),
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\Sendmail',
+                    'transport_class'   => Sendmail::class,
                     'transport_options' => 'some parameter',
                 ),
-                'Zend\Mail\Transport\Sendmail'
+                Sendmail::class
             ),
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\SendMail',
+                    'transport_class'   => Sendmail::class,
                     'transport_options' => array(
                         'parameter1'    => 'value',
                         'parameter2'    => true,
                     ),
                 ),
-                'Zend\Mail\Transport\Sendmail'
+                Sendmail::class
             ),
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\Smtp',
+                    'transport_class'   => Smtp::class,
                     'transport_options' => array(
                         'name'              => 'localhost',
                         'host'              => 'example.com',
@@ -142,7 +143,7 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                 ),
-                'Zend\Mail\Transport\Smtp'
+                Smtp::class
             ),
         );
     }

@@ -21,6 +21,7 @@ namespace EscoMailTest\Service;
 use Zend\ServiceManager\ServiceManager;
 use EscoMail\Options\ModuleOptions;
 use EscoMail\Service\MailLoggerFactory;
+use EscoMail\Service\MailLogger;
 
 class MailLoggerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,8 +34,8 @@ class MailLoggerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('EscoMail\Options', $options);
 
         $factory    = new MailLoggerFactory();
-        $logger     = $factory->createService($serviceManager);
+        $logger     = $factory($serviceManager, MailLogger::class);
 
-        $this->assertInstanceOf('EscoMail\Service\MailLogger', $logger);
+        self::assertInstanceOf(MailLogger::class, $logger);
     }
 }

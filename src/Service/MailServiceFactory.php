@@ -19,8 +19,8 @@
 namespace EscoMail\Service;
 
 use EscoMail\Options\ModuleOptions;
-use Zend\Mime\Mime;
-use Zend\ServiceManager\FactoryInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
@@ -205,15 +205,9 @@ class MailServiceFactory implements FactoryInterface, EventManagerAwareInterface
         return $model;
     }
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->serviceLocator = $serviceLocator;
+        $this->serviceLocator = $container;
 
         return $this;
     }

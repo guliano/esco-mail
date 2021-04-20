@@ -19,19 +19,23 @@
 namespace EscoMailTest\View;
 
 use EscoMail\Transport\PluginManager;
+use Zend\Mail\Transport\File;
+use Psr\Container\ContainerInterface;
+use Zend\Mail\Exception\RuntimeException;
 
 class PluginManagerTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testValidatePlugin()
     {
-        $plugin = new PluginManager();
+        $sm = $this->createMock(ContainerInterface::class);
+        $plugin = new PluginManager($sm);
 
-        $transport = $this->getMock('Zend\Mail\Transport\File');
-        $result = $plugin->validatePlugin($transport);
+        $transport = $this->createMock(File::class);
+        $result = $plugin->validate($transport);
         $this->assertNull($result);
 
-        $this->setExpectedException('Zend\Mail\Exception\RuntimeException');
-        $plugin->validatePlugin(new \stdClass());
+        $this->setExpectedException(RuntimeException::class);
+        $plugin->validate(new \stdClass());
     }
 }

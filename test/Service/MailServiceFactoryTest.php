@@ -26,6 +26,12 @@ use EscoMail\Options\ModuleOptions;
 use Zend\View\Model\ViewModel;
 use org\bovigo\vfs\vfsStream;
 use Zend\Mail\Transport\Exception\RuntimeException;
+use Zend\Mail\Transport\TransportInterface;
+use Zend\Mail\Transport\File;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\View\Renderer\RendererInterface;
+use Zend\Mail\Transport\InMemory;
+use Zend\EventManager\EventManagerInterface;
 
 class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +41,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         $factory = new MailServiceFactory();
-        $service = $factory->createService($serviceManager);
+        $service = $factory($serviceManager, 'EscoMail\Service\MailServiceFactory');
 
         $this->assertInstanceOf('EscoMail\Service\MailServiceFactory', $service);
     }
@@ -73,7 +79,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, 'EscoMail\Service\MailServiceFactory');
 
         $result = $this->invokeMethod($mailService, 'setBasePathToModel', array($viewModelMock));
 
@@ -93,10 +99,10 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $options = new ModuleOptions($configArray);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, 'EscoMail\Service\MailServiceFactory');
 
         $serviceManager
             ->expects($this->once())
@@ -115,12 +121,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers EscoMail\Service\MailServiceFactory::getTransport
+     *
      */
     public function testGetTransport()
     {
         vfsStream::setup('exampleDir', 0777);
         $configArray = array(
-            'transport_class'   => 'Zend\Mail\Transport\File',
+            'transport_class'   => File::class,
             'transport_options' => array(
                 'path' => vfsStream::url('exampleDir') . '/data/mail',
             ),
@@ -131,13 +138,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('EscoMail\Options', $options);
 
         $transportFactory = new TransportFactory();
-        $transport = $transportFactory->createService($serviceManager);
+        $transport = $transportFactory($serviceManager, TransportFactory::class);
         $serviceManager->setService('EscoMail\Transport', $transport);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, MailServiceFactory::class);
 
-        $this->assertInstanceOf('Zend\Mail\Transport\TransportInterface', $mailService->getTransport());
+        $this->assertInstanceOf(TransportInterface::class, $mailService->getTransport());
     }
 
     /**
@@ -145,7 +152,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRenderer()
     {
-        $viewRenderer = $this->getMock('Zend\View\Renderer\PhpRenderer');
+        $viewRenderer = $this->createMock(PhpRenderer::class);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ViewRenderer', $viewRenderer);
@@ -153,9 +160,9 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('EscoMail\Renderer', $viewRenderer);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, MailServiceFactory::class);
 
-        $this->assertInstanceOf('Zend\View\Renderer\RendererInterface', $mailService->getRenderer());
+        $this->assertInstanceOf(RendererInterface::class, $mailService->getRenderer());
     }
 
     /**
@@ -183,13 +190,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $transportMock = $this->getMock('Zend\Mail\Transport\InMemory');
+        $transportMock = $this->createMock(InMemory::class);
         $serviceManager->setService('EscoMail\Transport', $transportMock);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, MailServiceFactory::class);
 
-        $eventManagerMock = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManagerMock = $this->createMock(EventManagerInterface::class);
         $mailService->setEventManager($eventManagerMock);
 
         $transportMock->expects($this->once())->method('send')->will($this->returnValue(true));
@@ -224,13 +231,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $transportMock = $this->getMock('Zend\Mail\Transport\InMemory');
+        $transportMock = $this->createMock(InMemory::class);
         $serviceManager->setService('EscoMail\Transport', $transportMock);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, MailServiceFactory::class);
 
-        $eventManagerMock = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManagerMock = $this->createMock(EventManagerInterface::class);
         $mailService->setEventManager($eventManagerMock);
 
         $transportMock
@@ -259,7 +266,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('EscoMail\Options', $options);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, MailServiceFactory::class);
 
         $mailService->prepareMessage('Mail subject', 'This is body of the text message');
 
@@ -294,13 +301,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $viewRenderer = $this->getMock('Zend\View\Renderer\PhpRenderer');
+        $viewRenderer = $this->createMock(PhpRenderer::class);
 
         $serviceManager->setService('ViewRenderer', $viewRenderer);
         $serviceManager->setService('EscoMail\Renderer', $viewRenderer);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, MailServiceFactory::class);
 
         $viewModel = new ViewModel();
         $viewModel->setTemplate('template/name');
@@ -346,7 +353,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('EscoMail\Options', $options);
 
         $factory = new MailServiceFactory();
-        $mailService = $factory->createService($serviceManager);
+        $mailService = $factory($serviceManager, 'EscoMail\Service\MailService');
 
         vfsStream::setup('exampleDir', 0777);
         $fp = fopen(vfsStream::url('exampleDir') . '/example.txt', 'w');

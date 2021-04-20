@@ -20,6 +20,7 @@ namespace EscoMailTest\Options;
 
 use Zend\ServiceManager\ServiceManager;
 use EscoMail\Options\ModuleOptionsFactory;
+use EscoMail\Options\ModuleOptions;
 
 class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,8 +33,8 @@ class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('Config', $configArray);
 
         $factory        = new ModuleOptionsFactory();
-        $moduleOptions  = $factory->createService($serviceManager);
+        $moduleOptions  = $factory($serviceManager, ModuleOptions::class);
 
-        $this->assertInstanceOf('EscoMail\Options\ModuleOptions', $moduleOptions);
+        self::assertInstanceOf(ModuleOptions::class, $moduleOptions);
     }
 }

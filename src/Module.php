@@ -18,6 +18,7 @@
 
 namespace EscoMail;
 
+use EscoMail\Service\MailLogger;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\EventManager\EventInterface;
@@ -33,8 +34,9 @@ class Module implements
         $serviceManager = $app->getServiceManager();
         $eventManager   = $app->getEventManager();
 
-        /* @var $eventManager \Zend\EventManager\EventManagerInterface */
-        $eventManager->attachAggregate($serviceManager->get('EscoMail\Logger'));
+        /** @var MailLogger $logger */
+        $logger = $serviceManager->get('EscoMail\Logger');
+        $logger->attach($eventManager);
     }
 
     /**
