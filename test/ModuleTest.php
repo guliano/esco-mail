@@ -19,6 +19,10 @@
 namespace EscoMailTest;
 
 use EscoMail\Module;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Application;
+use Zend\EventManager\EventManagerInterface;
+use Zend\ServiceManager\ServiceManager;
 
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,10 +37,10 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module         = new Module();
 
-        $mvcEvent       = $this->createMock('Zend\Mvc\MvcEvent');
-        $application    = $this->createMock('Zend\Mvc\Application', array(), array(), '', false);
-        $eventManager   = $this->createMock('Zend\EventManager\EventManagerInterface');
-        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
+        $mvcEvent       = $this->createMock(MvcEvent::class);
+        $application    = $this->createMock(Application::class);
+        $eventManager   = $this->createMock(EventManagerInterface::class);
+        $serviceManager = $this->createMock(ServiceManager::class);
 
         $mvcEvent->expects($this->once())->method('getApplication')->will($this->returnValue($application));
         $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));

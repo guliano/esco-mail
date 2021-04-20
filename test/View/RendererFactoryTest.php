@@ -20,6 +20,11 @@ namespace EscoMailTest\View;
 
 use Zend\ServiceManager\ServiceManager;
 use EscoMail\View\RendererFactory;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\View\HelperPluginManager;
+use Zend\View\Resolver\AggregateResolver;
+use Zend\View\Helper\Url;
+use Zend\Mvc\Router\Http\TreeRouteStack;
 
 class RendererFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,16 +39,16 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $viewRenderer = $this->createMock('Zend\View\Renderer\PhpRenderer');
+        $viewRenderer = $this->createMock(PhpRenderer::class);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $configArray);
         $serviceManager->setService('ViewRenderer', $viewRenderer);
 
         $factory        = new RendererFactory();
-        $renderer       = $factory($serviceManager, 'Zend\View\Renderer\PhpRenderer');
+        $renderer       = $factory($serviceManager, PhpRenderer::class);
 
-        $this->assertInstanceOf('Zend\View\Renderer\PhpRenderer', $renderer);
+        $this->assertInstanceOf(PhpRenderer::class, $renderer);
     }
 
     public function testCreateServiceWithoutServiceManager()
@@ -56,8 +61,8 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $helperManager  = $this->createMock('Zend\View\HelperPluginManager', array(), array(), '', false);
-        $viewResolver   = $this->createMock('Zend\View\Resolver\AggregateResolver');
+        $helperManager  = $this->createMock(HelperPluginManager::class, array(), array(), '', false);
+        $viewResolver   = $this->createMock(AggregateResolver::class);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $configArray);
@@ -65,10 +70,10 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ViewHelperManager', $helperManager);
 
         $factory        = new RendererFactory();
-        $renderer       = $factory($serviceManager, 'Zend\View\Renderer\PhpRenderer');
-        $this->assertInstanceOf('Zend\View\Renderer\PhpRenderer', $renderer);
+        $renderer       = $factory($serviceManager, PhpRenderer::class);
+        $this->assertInstanceOf(PhpRenderer::class, $renderer);
 
-        $this->assertInstanceOf('Zend\View\HelperPluginManager', $renderer->getHelperPluginManager());
+        $this->assertInstanceOf(HelperPluginManager::class, $renderer->getHelperPluginManager());
     }
 
     public function testCreateServiceWithoutServiceManagerAndWithBaseUri()
@@ -84,10 +89,10 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $helperManager  = $this->createMock('Zend\View\HelperPluginManager', array(), array(), '', false);
-        $viewResolver   = $this->createMock('Zend\View\Resolver\AggregateResolver');
-        $urlHelper      = $this->createMock('Zend\View\Helper\Url');
-        $httpRouter     = $this->createMock('Zend\Mvc\Router\Http\TreeRouteStack');
+        $helperManager  = $this->createMock(HelperPluginManager::class, array(), array(), '', false);
+        $viewResolver   = $this->createMock(AggregateResolver::class);
+        $urlHelper      = $this->createMock(Url::class);
+        $httpRouter     = $this->createMock(TreeRouteStack::class);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $configArray);
@@ -101,9 +106,9 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
         $urlHelper->expects($this->once())->method('setRouter')->with($httpRouter);
 
         $factory        = new RendererFactory();
-        $renderer       = $factory($serviceManager, 'Zend\View\Renderer\PhpRenderer');
-        $this->assertInstanceOf('Zend\View\Renderer\PhpRenderer', $renderer);
+        $renderer       = $factory($serviceManager, PhpRenderer::class);
+        $this->assertInstanceOf(PhpRenderer::class, $renderer);
 
-        $this->assertInstanceOf('Zend\View\HelperPluginManager', $renderer->getHelperPluginManager());
+        $this->assertInstanceOf(HelperPluginManager::class, $renderer->getHelperPluginManager());
     }
 }

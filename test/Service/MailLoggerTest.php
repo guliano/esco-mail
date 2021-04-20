@@ -25,6 +25,8 @@ use EscoMail\Options\ModuleOptions;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Zend\Mail\Message;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\SharedEventManagerInterface;
 
 class MailLoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -91,8 +93,8 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
 
         $mailLogger     = new MailLogger($options, $serviceManager);
 
-        $eventManager   = $this->createMock('Zend\\EventManager\\EventManagerInterface');
-        $sharedManager  = $this->createMock('Zend\EventManager\SharedEventManagerInterface');
+        $eventManager   = $this->createMock(EventManagerInterface::class);
+        $sharedManager  = $this->createMock(SharedEventManagerInterface::class);
 
         $callbackMock   = $this->getMockBuilder('Zend\\Stdlib\\CallbackHandler')
             ->disableOriginalConstructor()
@@ -164,7 +166,7 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
         $mailLogger     = new MailLogger($options, $serviceManager);
 
         $mailSubject = 'Subject of the mail message';
-        $messageMock = $this->createMock('Zend\\Mail\\Message');
+        $messageMock = $this->createMock(Message::class);
         $messageMock->expects(self::once())
             ->method('getSubject')
             ->will($this->returnValue($mailSubject));
@@ -201,7 +203,7 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
         $mailLogger     = new MailLogger($options, $serviceManager);
 
         $mailSubject = 'Subject of the mail message';
-        $messageMock = $this->createMock('Zend\\Mail\\Message', array('getSubject'));
+        $messageMock = $this->createMock(Message::class, array('getSubject'));
         $messageMock->expects(self::once())
             ->method('getSubject')
             ->will($this->returnValue($mailSubject));

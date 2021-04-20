@@ -24,6 +24,9 @@ use EscoMail\Options\ModuleOptions;
 use EscoMail\Transport\PluginManager;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Zend\Mail\Transport\File;
+use Zend\Mail\Transport\Sendmail;
+use Zend\Mail\Transport\Smtp;
 
 class TransportFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -82,7 +85,7 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateServiceWithDirectoryCreation()
     {
         $configArray = array(
-            'transport_class'   => 'Zend\Mail\Transport\File',
+            'transport_class'   => File::class,
             'transport_options' => array(
                 'path' => vfsStream::url('exampleDir') . '/tmp'
             ),
@@ -94,7 +97,7 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new TransportFactory();
         $transport = $factory($this->serviceManager, 'EscoMail\Transport');
 
-        self::assertInstanceOf('Zend\Mail\Transport\File', $transport);
+        self::assertInstanceOf(File::class, $transport);
         self::assertTrue($this->root->hasChild('tmp'));
     }
 
@@ -103,31 +106,31 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\Sendmail',
+                    'transport_class'   => Sendmail::class,
                     'transport_options' => 'some parameter',
                 ),
-                'Zend\Mail\Transport\Sendmail'
+                Sendmail::class
             ),
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\Sendmail',
+                    'transport_class'   => Sendmail::class,
                     'transport_options' => 'some parameter',
                 ),
-                'Zend\Mail\Transport\Sendmail'
+                Sendmail::class
             ),
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\SendMail',
+                    'transport_class'   => Sendmail::class,
                     'transport_options' => array(
                         'parameter1'    => 'value',
                         'parameter2'    => true,
                     ),
                 ),
-                'Zend\Mail\Transport\Sendmail'
+                Sendmail::class
             ),
             array(
                 array(
-                    'transport_class'   => 'Zend\Mail\Transport\Smtp',
+                    'transport_class'   => Smtp::class,
                     'transport_options' => array(
                         'name'              => 'localhost',
                         'host'              => 'example.com',
@@ -140,7 +143,7 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                 ),
-                'Zend\Mail\Transport\Smtp'
+                Smtp::class
             ),
         );
     }
