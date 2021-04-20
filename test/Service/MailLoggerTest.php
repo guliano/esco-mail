@@ -18,6 +18,7 @@
 
 namespace EscoMailTest\Service;
 
+use Zend\Mail\AddressList;
 use Zend\ServiceManager\ServiceManager;
 use EscoMail\Service\MailLogger;
 use EscoMail\Options\ModuleOptions;
@@ -90,8 +91,8 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
 
         $mailLogger     = new MailLogger($options, $serviceManager);
 
-        $eventManager   = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $sharedManager  = $this->getMock('Zend\EventManager\SharedEventManagerInterface');
+        $eventManager   = $this->createMock('Zend\\EventManager\\EventManagerInterface');
+        $sharedManager  = $this->createMock('Zend\EventManager\SharedEventManagerInterface');
 
         $callbackMock   = $this->getMockBuilder('Zend\\Stdlib\\CallbackHandler')
             ->disableOriginalConstructor()
@@ -163,11 +164,14 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
         $mailLogger     = new MailLogger($options, $serviceManager);
 
         $mailSubject = 'Subject of the mail message';
-        $messageMock = $this->getMock('Zend\\Mail\\Message', array('getSubject'));
-        $messageMock->expects($this->once())
+        $messageMock = $this->createMock('Zend\\Mail\\Message');
+        $messageMock->expects(self::once())
             ->method('getSubject')
             ->will($this->returnValue($mailSubject));
-        $messageMock->addTo('foo@bar.com');
+        $addressList = new AddressList();
+        $messageMock->expects(self::atLeastOnce())
+            ->method('getTo')
+            ->will($this->returnValue($addressList->add('foo@bar.com')));
 
         $mvcEvent = new \Zend\Mvc\MvcEvent();
         $mvcEvent->setTarget($messageMock);
@@ -197,11 +201,14 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
         $mailLogger     = new MailLogger($options, $serviceManager);
 
         $mailSubject = 'Subject of the mail message';
-        $messageMock = $this->getMock('Zend\\Mail\\Message', array('getSubject'));
-        $messageMock->expects($this->once())
+        $messageMock = $this->createMock('Zend\\Mail\\Message', array('getSubject'));
+        $messageMock->expects(self::once())
             ->method('getSubject')
             ->will($this->returnValue($mailSubject));
-        $messageMock->addTo('foo@bar.com');
+        $addressList = new AddressList();
+        $messageMock->expects(self::atLeastOnce())
+            ->method('getTo')
+            ->will($this->returnValue($addressList->add('foo@bar.com')));
 
         $mvcEvent = new \Zend\Mvc\MvcEvent();
         $mvcEvent->setTarget($messageMock);

@@ -34,7 +34,7 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $viewRenderer = $this->getMock('Zend\View\Renderer\PhpRenderer');
+        $viewRenderer = $this->createMock('Zend\View\Renderer\PhpRenderer');
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $configArray);
@@ -56,8 +56,8 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $helperManager  = $this->getMock('Zend\View\HelperPluginManager', array(), array(), '', false);
-        $viewResolver   = $this->getMock('Zend\View\Resolver\AggregateResolver');
+        $helperManager  = $this->createMock('Zend\View\HelperPluginManager', array(), array(), '', false);
+        $viewResolver   = $this->createMock('Zend\View\Resolver\AggregateResolver');
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $configArray);
@@ -84,10 +84,10 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $helperManager  = $this->getMock('Zend\View\HelperPluginManager', array(), array(), '', false);
-        $viewResolver   = $this->getMock('Zend\View\Resolver\AggregateResolver');
-        $urlHelper      = $this->getMock('Zend\View\Helper\Url');
-        $httpRouter     = $this->getMock('Zend\Mvc\Router\Http\TreeRouteStack');
+        $helperManager  = $this->createMock('Zend\View\HelperPluginManager', array(), array(), '', false);
+        $viewResolver   = $this->createMock('Zend\View\Resolver\AggregateResolver');
+        $urlHelper      = $this->createMock('Zend\View\Helper\Url');
+        $httpRouter     = $this->createMock('Zend\Mvc\Router\Http\TreeRouteStack');
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $configArray);

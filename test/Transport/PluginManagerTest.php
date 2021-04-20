@@ -25,10 +25,10 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidatePlugin()
     {
-        $sm = $this->getMock('Psr\Container\ContainerInterface');
+        $sm = $this->createMock('Psr\Container\ContainerInterface');
         $plugin = new PluginManager($sm);
 
-        $transport = $this->getMock('Zend\Mail\Transport\File');
+        $transport = $this->createMock('Zend\Mail\Transport\File');
         $result = $plugin->validate($transport);
         $this->assertNull($result);
 

@@ -18,6 +18,7 @@
 
 namespace EscoMail\Service;
 
+use Countable;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
@@ -172,14 +173,25 @@ class MailLogger extends AbstractListenerAggregate implements ListenerAggregateI
     private function prepareAddressList(Message $message)
     {
         $addressList = array();
-        foreach ($message->getTo() as $address) {
-            $addressList[] = $address->getEmail();
+        $to = $message->getTo();
+        if ($to instanceof Countable) {
+            foreach ($message->getTo() as $address) {
+                $addressList[] = $address->getEmail();
+            }
         }
-        foreach ($message->getCc() as $address) {
-            $addressList[] = $address->getEmail();
+
+        $cc = $message->getCc();
+        if ($cc instanceof Countable) {
+            foreach ($cc as $address) {
+                $addressList[] = $address->getEmail();
+            }
         }
-        foreach ($message->getBcc() as $address) {
-            $addressList[] = $address->getEmail();
+
+        $bcc = $message->getBcc();
+        if ($bcc instanceof Countable) {
+            foreach ($bcc as $address) {
+                $addressList[] = $address->getEmail();
+            }
         }
 
         return $addressList;

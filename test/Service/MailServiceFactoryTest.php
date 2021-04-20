@@ -93,7 +93,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $options = new ModuleOptions($configArray);
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock('Zend\ServiceManager\ServiceManager');
 
         $factory = new MailServiceFactory();
         $mailService = $factory($serviceManager, 'EscoMail\Service\MailServiceFactory');
@@ -146,7 +146,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRenderer()
     {
-        $viewRenderer = $this->getMock('Zend\View\Renderer\PhpRenderer');
+        $viewRenderer = $this->createMock('Zend\View\Renderer\PhpRenderer');
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ViewRenderer', $viewRenderer);
@@ -184,13 +184,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $transportMock = $this->getMock('Zend\Mail\Transport\InMemory');
+        $transportMock = $this->createMock('Zend\Mail\Transport\InMemory');
         $serviceManager->setService('EscoMail\Transport', $transportMock);
 
         $factory = new MailServiceFactory();
         $mailService = $factory($serviceManager, 'EscoMail\Service\MailServiceFactory');
 
-        $eventManagerMock = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManagerMock = $this->createMock('Zend\EventManager\EventManagerInterface');
         $mailService->setEventManager($eventManagerMock);
 
         $transportMock->expects($this->once())->method('send')->will($this->returnValue(true));
@@ -225,13 +225,13 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $transportMock = $this->getMock('Zend\Mail\Transport\InMemory');
+        $transportMock = $this->createMock('Zend\Mail\Transport\InMemory');
         $serviceManager->setService('EscoMail\Transport', $transportMock);
 
         $factory = new MailServiceFactory();
         $mailService = $factory($serviceManager, 'EscoMail\Service\MailServiceFactory');
 
-        $eventManagerMock = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManagerMock = $this->createMock('Zend\EventManager\EventManagerInterface');
         $mailService->setEventManager($eventManagerMock);
 
         $transportMock
@@ -295,7 +295,7 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('EscoMail\Options', $options);
 
-        $viewRenderer = $this->getMock('Zend\View\Renderer\PhpRenderer');
+        $viewRenderer = $this->createMock('Zend\View\Renderer\PhpRenderer');
 
         $serviceManager->setService('ViewRenderer', $viewRenderer);
         $serviceManager->setService('EscoMail\Renderer', $viewRenderer);
