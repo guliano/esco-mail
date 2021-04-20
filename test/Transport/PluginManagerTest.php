@@ -25,13 +25,14 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidatePlugin()
     {
-        $plugin = new PluginManager();
+        $sm = $this->getMock('Psr\Container\ContainerInterface');
+        $plugin = new PluginManager($sm);
 
         $transport = $this->getMock('Zend\Mail\Transport\File');
-        $result = $plugin->validatePlugin($transport);
+        $result = $plugin->validate($transport);
         $this->assertNull($result);
 
         $this->setExpectedException('Zend\Mail\Exception\RuntimeException');
-        $plugin->validatePlugin(new \stdClass());
+        $plugin->validate(new \stdClass());
     }
 }

@@ -29,7 +29,6 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
     private $serviceManager;
-    private $pluginManager;
 
     /**
      * @var vfsStreamDirectory
@@ -41,7 +40,6 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->serviceManager   = new ServiceManager();
-        $this->pluginManager    = new PluginManager();
         $this->root             = vfsStream::setup('exampleDir', 0777);
     }
 
@@ -63,7 +61,7 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new TransportFactory();
         $this->setExpectedException('RuntimeException');
 
-        $factory->createService($this->serviceManager);
+        $factory($this->serviceManager, 'EscoMail\Transport');
     }
 
     /**
@@ -76,9 +74,9 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->serviceManager->setService('EscoMail\Options', $config);
 
         $factory = new TransportFactory();
-        $transport = $factory->createService($this->serviceManager);
+        $transport = $factory($this->serviceManager, 'EscoMail\Transport');
 
-        $this->assertInstanceOf($expected, $transport);
+        self::assertInstanceOf($expected, $transport);
     }
 
     public function testCreateServiceWithDirectoryCreation()
@@ -94,10 +92,10 @@ class TransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->serviceManager->setService('EscoMail\Options', $config);
 
         $factory = new TransportFactory();
-        $transport = $factory->createService($this->serviceManager);
+        $transport = $factory($this->serviceManager, 'EscoMail\Transport');
 
-        $this->assertInstanceOf('Zend\Mail\Transport\File', $transport);
-        $this->assertTrue($this->root->hasChild('tmp'));
+        self::assertInstanceOf('Zend\Mail\Transport\File', $transport);
+        self::assertTrue($this->root->hasChild('tmp'));
     }
 
     public function getConfigArray()

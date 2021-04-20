@@ -18,34 +18,24 @@
 
 namespace EscoMail\Transport;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mail\Transport\File as FileTransport;
 
 class TransportFactory implements FactoryInterface
 {
-
-    /**
-     * @var PluginManager
-     */
-    private $transportPluginManager;
-
-
-    public function __construct()
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->transportPluginManager = new PluginManager();
-    }
+        $pluginManager = new PluginManager($container);
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
         /* @var $config \EscoMail\Options\ModuleOptions */
-        $config = $serviceLocator->get('EscoMail\Options');
+        $config = $container->get('EscoMail\Options');
 
         if ($config->getTransportClass()) {
             /* @var $transport TransportInterface */
-            $transport = $this->transportPluginManager->get($config->getTransportClass());
+            $transport = $pluginManager->get($config->getTransportClass());
 
             if ($transport instanceof FileTransport) {
                 $transportOptions = $config->getTransportOptions();

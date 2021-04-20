@@ -32,8 +32,8 @@ class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('Config', $configArray);
 
         $factory        = new ModuleOptionsFactory();
-        $moduleOptions  = $factory->createService($serviceManager);
+        $moduleOptions  = $factory($serviceManager, 'EscoMail\Options\ModuleOptions');
 
-        $this->assertInstanceOf('EscoMail\Options\ModuleOptions', $moduleOptions);
+        self::assertInstanceOf('EscoMail\Options\ModuleOptions', $moduleOptions);
     }
 }

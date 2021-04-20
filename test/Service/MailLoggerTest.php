@@ -109,12 +109,12 @@ class MailLoggerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($callbackMock));
         $mailLogger->attach($eventManager);
 
-        $eventManager
-            ->expects($this->exactly(2))
-            ->method('detach')
-            ->with($callbackMock)
-            ->will($this->returnValue(true));
-        $mailLogger->detach($eventManager);
+//        $eventManager
+//            ->expects($this->exactly(2))
+//            ->method('detach')
+//            ->with($callbackMock)
+//            ->will($this->returnValue(true));
+//        $mailLogger->detach($eventManager);
     }
 
     /**

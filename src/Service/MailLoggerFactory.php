@@ -18,18 +18,16 @@
 
 namespace EscoMail\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class MailLoggerFactory implements FactoryInterface
 {
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $options = $serviceLocator->get('EscoMail\Options');
+        $mailOptions = $container->get('EscoMail\Options');
 
-        $logger = new MailLogger($options, $serviceLocator);
-
-        return $logger;
+        return new MailLogger($mailOptions, $container);
     }
 }

@@ -28,7 +28,7 @@ class PluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc}
      */
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
         if ($plugin instanceof TransportInterface) {
             return;

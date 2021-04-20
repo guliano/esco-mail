@@ -41,7 +41,7 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ViewRenderer', $viewRenderer);
 
         $factory        = new RendererFactory();
-        $renderer       = $factory->createService($serviceManager);
+        $renderer       = $factory($serviceManager, 'Zend\View\Renderer\PhpRenderer');
 
         $this->assertInstanceOf('Zend\View\Renderer\PhpRenderer', $renderer);
     }
@@ -65,7 +65,7 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ViewHelperManager', $helperManager);
 
         $factory        = new RendererFactory();
-        $renderer       = $factory->createService($serviceManager);
+        $renderer       = $factory($serviceManager, 'Zend\View\Renderer\PhpRenderer');
         $this->assertInstanceOf('Zend\View\Renderer\PhpRenderer', $renderer);
 
         $this->assertInstanceOf('Zend\View\HelperPluginManager', $renderer->getHelperPluginManager());
@@ -101,7 +101,7 @@ class RendererFactoryTest extends \PHPUnit_Framework_TestCase
         $urlHelper->expects($this->once())->method('setRouter')->with($httpRouter);
 
         $factory        = new RendererFactory();
-        $renderer       = $factory->createService($serviceManager);
+        $renderer       = $factory($serviceManager, 'Zend\View\Renderer\PhpRenderer');
         $this->assertInstanceOf('Zend\View\Renderer\PhpRenderer', $renderer);
 
         $this->assertInstanceOf('Zend\View\HelperPluginManager', $renderer->getHelperPluginManager());

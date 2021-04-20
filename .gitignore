@@ -4,3 +4,4 @@ coposer.phar
 
 # Ignore netbeans project files
 nbproject
+.idea

@@ -33,8 +33,8 @@ class MailLoggerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('EscoMail\Options', $options);
 
         $factory    = new MailLoggerFactory();
-        $logger     = $factory->createService($serviceManager);
+        $logger     = $factory($serviceManager, 'EscoMail\Service\MailLogger');
 
-        $this->assertInstanceOf('EscoMail\Service\MailLogger', $logger);
+        self::assertInstanceOf('EscoMail\Service\MailLogger', $logger);
     }
 }

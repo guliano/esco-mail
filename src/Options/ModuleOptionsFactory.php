@@ -18,15 +18,15 @@
 
 namespace EscoMail\Options;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class ModuleOptionsFactory implements FactoryInterface
 {
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
+        // TODO: Implement __invoke() method.
+        $config = $container->get('Config');
 
         return new ModuleOptions(isset($config['esco_mail']) ? $config['esco_mail'] : array());
     }

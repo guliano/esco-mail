@@ -78,7 +78,7 @@ class MailLogger extends AbstractListenerAggregate implements ListenerAggregateI
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         if ($this->options->getLogDir()) {
             $sharedEvents = $events->getSharedManager();
